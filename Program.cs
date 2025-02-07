@@ -21,6 +21,16 @@ builder.Services.AddCors(options =>
                  .AllowAnyMethod();   // מאפשר כל שיטת HTTP
       });
 });
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins", builder =>
+    {
+        // החליפו את הדומיין הזה בדומיין *המדויק* של האפליקציה שלכם
+        builder.WithOrigins("https://todolistserver-otge.onrender.com") // דוגמה
+               .AllowAnyHeader()
+               .AllowAnyMethod();
+    });
+});
 
 // הוספת שירותי חיבור למסד נתונים
 builder.Services.AddScoped<IDbConnection>(sp =>
