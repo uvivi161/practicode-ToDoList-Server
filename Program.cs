@@ -1,6 +1,8 @@
 using System.Data;
+using System.Diagnostics;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 using TodoApi;
 
@@ -57,6 +59,7 @@ app.MapGet("/items", async (IDbConnection db) =>
     return Results.Ok(items);
 });
 
+
 app.MapPost("/items", async ([FromBody] ItemDTOPost itemDTOPost, IDbConnection db) =>
 {
     var query = "insert into items (Name,IsComplete) values (@Name,false) ";
@@ -71,7 +74,7 @@ app.MapPut("/items/{id}", async (int id, [FromBody] ItemDTOPut itemDTOPut, IDbCo
     {
         return Results.BadRequest(new { Message = "ID is required" });
     }
-
+    
     var query = "UPDATE items SET IsComplete = @IsComplete WHERE Id = @Id";
     var result = await db.ExecuteAsync(query, new { Id = id, itemDTOPut.IsComplete });
 
